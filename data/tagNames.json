@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "tagName": "Technology"
+  },
+  {
+    "id": 2,
+    "tagName": "Science"
+  },
+  {
+    "id": 3,
+    "tagName": "Art"
+  },
+  {
+    "id": 4,
+    "tagName": "Music"
+  },
+  {
+    "id": 5,
+    "tagName": "Sports"
+  },
+  {
+    "id": 6,
+    "tagName": "Literature"
+  },
+  {
+    "id": 7,
+    "tagName": "Travel"
+  },
+  {
+    "id": 8,
+    "tagName": "History"
+  },
+  {
+    "id": 9,
+    "tagName": "Food"
+  },
+  {
+    "id": 10,
+    "tagName": "Fashion"
+  }
+]
