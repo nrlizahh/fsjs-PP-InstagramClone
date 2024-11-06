@@ -1,0 +1,43 @@
+[
+    {
+      "id": 1,
+      "tagName": ["travel", "photography"]
+    },
+    {
+      "id": 2,
+      "tagName": ["fitness", "health"]
+    },
+    {
+      "id": 3,
+      "tagName": ["technology", "innovation"]
+    },
+    {
+      "id": 4,
+      "tagName": ["food", "cooking"]
+    },
+    {
+      "id": 5,
+      "tagName": ["music", "guitar"]
+    },
+    {
+      "id": 6,
+      "tagName": ["admin", "support"]
+    },
+    {
+      "id": 7,
+      "tagName": ["fashion", "style"]
+    },
+    {
+      "id": 8,
+      "tagName": ["sports", "basketball"]
+    },
+    {
+      "id": 9,
+      "tagName": ["art", "painting"]
+    },
+    {
+      "id": 10,
+      "tagName": ["moderator", "support"]
+    }
+  ]
+  

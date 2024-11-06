@@ -1,0 +1,83 @@
+[
+    {
+      "id": 1,
+      "username": "john_doe123",
+      "fullname": "John Doe",
+      "email": "johndoe@example.com",
+      "password": "securepassword123",
+      "role": "user"
+    },
+    {
+      "id": 2,
+      "username": "jane_smith88",
+      "fullname": "Jane Smith",
+      "email": "janesmith88@example.com",
+      "password": "password456",
+      "role": "user"
+    },
+    {
+      "id": 3,
+      "username": "mark_twitterman",
+      "fullname": "Mark Twitterman",
+      "email": "marktwitterman@example.com",
+      "password": "password789",
+      "role": "admin"
+    },
+    {
+      "id": 4,
+      "username": "susan_brown",
+      "fullname": "Susan Brown",
+      "email": "susanbrown@example.com",
+      "password": "mypassword101",
+      "role": "user"
+    },
+    {
+      "id": 5,
+      "username": "alex_wilson",
+      "fullname": "Alex Wilson",
+      "email": "alexwilson@example.com",
+      "password": "alexpassword123",
+      "role": "user"
+    },
+    {
+      "id": 6,
+      "username": "admin_master",
+      "fullname": "Admin Master",
+      "email": "adminmaster@example.com",
+      "password": "adminpassword999",
+      "role": "admin"
+    },
+    {
+      "id": 7,
+      "username": "chloe_miller",
+      "fullname": "Chloe Miller",
+      "email": "chloemiller@example.com",
+      "password": "chloepassword2023",
+      "role": "user"
+    },
+    {
+      "id": 8,
+      "username": "lucas_king",
+      "fullname": "Lucas King",
+      "email": "lucasking@example.com",
+      "password": "kinglucas321",
+      "role": "user"
+    },
+    {
+      "id": 9,
+      "username": "emma_williams",
+      "fullname": "Emma Williams",
+      "email": "emmawilliams@example.com",
+      "password": "emma12345",
+      "role": "user"
+    },
+    {
+      "id": 10,
+      "username": "admin_julia",
+      "fullname": "Julia Admin",
+      "email": "juliaadmin@example.com",
+      "password": "admin123admin",
+      "role": "admin"
+    }
+  ]
+  
