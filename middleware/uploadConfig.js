@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
     if (file.fieldname === 'avatar') {
         // Untuk gambar profil, simpan di folder 'uploads/profile'
         cb(null, 'uploads/profiles/');
-      } else if (file.fieldname === 'postImage') {
+      } else if (file.fieldname === 'imageUrl') {
         // Untuk gambar postingan, simpan di folder 'uploads/post'
         cb(null, 'uploads/posts/');
       } else {

@@ -28,7 +28,7 @@ app.get('/register', UserController.register)
 app.post('/register', UserController.postRegister )
 app.post('/login', UserController.login)
 const isLoggedin = function(req,res,next) {
-    console.log(req.session);
+    // console.log(req.session);
     if (!req.session.userId) {
         const error = 'Please login first!'
         res.redirect(`/?error=${error}`)

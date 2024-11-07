@@ -34,7 +34,9 @@ module.exports = (sequelize, DataTypes) => {
     
     location: DataTypes.STRING,
     UserId: DataTypes.INTEGER,
-    photoProfile: DataTypes.STRING
+    photoProfile: {
+      type: DataTypes.STRING,
+    }
   }, {
     sequelize,
     modelName: 'Profile',

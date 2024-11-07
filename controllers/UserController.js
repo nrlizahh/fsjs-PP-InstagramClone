@@ -18,7 +18,7 @@ class UserController{
             let data = await User.findOne({where: {username}})
 
             if(data){
-                const isValidPassword =bcrypt.compareSync(password, data.password)
+                const isValidPassword = data.comparePassword(password)
                 if(isValidPassword){
                     req.session.userId = data.id
                     return res.redirect(`/profile/${data.id}`)
@@ -70,7 +70,8 @@ class UserController{
 
             res.redirect('/')
         } catch (error) {
-            if(error.name === 'SequelizeValidationError'){
+            console.log(error.name, "<<<<<<<")
+            if(error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError'){
                 let err = error.errors.map((el) =>  el.message)
                 res.redirect(`/register?error=${err}`)
             }else{

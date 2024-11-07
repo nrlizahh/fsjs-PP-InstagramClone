@@ -7,13 +7,8 @@ class Controller {
     static async profilePage(req, res){
         const { userId } = req.params 
         try {
-            let user = await User.findOne({
-                where: { id: userId }, 
-                include: [{
-                  model: Profile,
-                  as: 'profile' 
-                }]
-              })
+            let user = await User.getUserPosts(userId)
+            
             res.render('profile', {user})
         } catch (error) {
             res.send(error)
@@ -24,13 +19,7 @@ class Controller {
         try {
             const {error} = req.query
             const { userId } = req.params;
-            let user = await User.findOne({
-                where: { id: userId }, 
-                include: [{
-                  model: Profile,
-                  as: 'profile' 
-                }]
-              })
+            let user = await User.getUserProfile(userId)
             res.render('editProfile', {user, error})
         } catch (error) {
           res.send(error);
@@ -39,10 +28,18 @@ class Controller {
     
       static async handlerUserEdit(req, res) {
         try {
-            const { username, fullName, biodata, photoProfile, gender} = req.body;
+            const { username, fullName, biodata, gender} = req.body;
             const { userId } = req.params;
-            const { filename } = req.file
-            let updUser = await User.update(
+            let file = req.file
+            let filename = null
+            if(file) {
+                filename = file.path 
+                ? `http://localhost:3000/${file.path}`
+                : null
+            }
+
+
+            await User.update(
                 { username, fullName },
                 {
                     where: {
@@ -55,12 +52,20 @@ class Controller {
                     UserId: userId
                 }
             })
+            
             if (findProfile) {
+                let payload = {
+                    biodata, 
+                    gender
+                }
+                if(filename) {
+                    payload.photoProfile = filename
+                }
+
+                console.log(payload)
+
                 await Profile.update(
-                    { 
-                        biodata, 
-                        gender, 
-                        photoProfile: filename || ''},  
+                    payload,  
                     {
                         where: {
                         UserId : userId,
@@ -71,13 +76,14 @@ class Controller {
                 await Profile.create({ 
                     biodata, 
                     gender, 
-                    photoProfile: filename || '', 
+                    photoProfile: filename, 
                     UserId: userId
                 });
             }
 
             res.redirect(`/profile/${userId}`);
         } catch (error) {
+
             const { userId } = req.params
             if(error.name === 'SequelizeValidationError'){
                 let err = error.errors.map((el) =>  el.message)
@@ -91,20 +97,15 @@ class Controller {
     static async renderAddPost(req, res){
         try {
             const { userId } = req.params;
-        
+            const {error} = req.query
             // Mencari user berdasarkan userId
-            let user = await User.findOne({
-                where: { id: userId },
-                include: [
-                    {
-                        model: Post, 
-                    }
-                ]
-            });
+            let user = await User.findByPk(userId);
             let tag = await Tag.findAll()
 
-            res.render('addPost', { user, tag });
+            res.render('addPost', { user, tag, error });
         } catch (error) {
+            console.log(error, "=========");
+            
             res.send(error)
         }
     }
@@ -112,20 +113,42 @@ class Controller {
     static async handlerAddPost (req, res){
         try {
             const { userId } = req.params;
-            // const { filename } = req.file
-            console.log(req)
+            const { caption, tags } = req.body
+
             if (req.file) {
-                const photoUrl = req.file.path;  
+                let file = req.file
+                const photoUrl = file.path 
+                ? `http://localhost:3000/${file.path}`
+                : null
+
                 let newPost = await Post.create({
-                    userId: userId,
-                    photoUrl: photoUrl,  
+                    UserId: userId,
+                    imageURL: photoUrl,
+                    createdDate: new Date(),
+                    caption
                 });
+
+                if (tags && tags.length > 0) {
+                    let payload = tags.map((el) => {
+                        return {
+                            TagId: el,
+                            PostId: newPost.id
+                        }
+                    })
+                    await PostTag.bulkCreate(payload)
+                }
+            } else {
+                return res.redirect(`/profile/${userId}/add?error=Please%20add%20photo`)
             }
-           
-            // Redirect ke halaman profil user setelah foto di-upload
             res.redirect(`/profile/${userId}`);
         } catch (error) {
-            res.send(error)
+            const { userId } = req.params;
+            if(error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError'){
+                let err = error.errors.map((el) =>  el.message)
+                res.redirect(`/profile/${userId}/add?error=${err}`)
+            }else{
+                res.send(error)
+            }
         }
         
     }

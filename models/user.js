@@ -15,13 +15,57 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasOne(models.Profile, {foreignKey: 'UserId', as: 'profile'})
-      User.hasMany(models.Post, {foreignKey: 'UserId'})
+      User.hasMany(models.Post, {foreignKey: 'UserId', as: 'posts'})
+    }
+
+    comparePassword(password) {
+      return bcrypt.compareSync(password, this.password);
+    }
+
+    static async getUserProfile(userId) {
+      try {
+        let user = await User.findOne({
+          where: { id: userId }, 
+          include: [{
+            model: sequelize.models.Profile,
+            as: 'profile' 
+          }]
+        })
+
+        return user
+      } catch (error) {
+        throw error
+      }
+    }
+
+    static async getUserPosts(userId) {
+      try {
+        let user = await User.findOne({
+          where: { id: userId }, 
+          include: [{
+            model: sequelize.models.Profile,
+            as: 'profile' 
+          }, {
+            model: sequelize.models.Post,
+            as: 'posts' 
+          }]
+        })
+
+        return user
+      } catch (error) {
+        throw error
+      }
     }
   }
+  
+
   User.init({
     username:{
         type : DataTypes.STRING,
         allowNull: false,
+        unique: {
+          msg: 'Username must be unique'
+        },
         validate: {
           notNull: {
             msg : "Username required!"
@@ -71,7 +115,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         len: {
           args: [5,20],
-          msg: "The minimum length is 5 characters and the maximum length is 20 characters"
+          msg: "The minimum password length is 5 characters and the maximum length is 20 characters"
         }
       }
     }, 
