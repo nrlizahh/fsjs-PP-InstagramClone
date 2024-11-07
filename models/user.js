@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
             as: 'profile' 
           }, {
             model: sequelize.models.Post,
-            as: 'posts' 
+            as: 'posts',
           }]
         })
 

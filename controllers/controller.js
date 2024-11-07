@@ -6,10 +6,11 @@ class Controller {
    
     static async profilePage(req, res){
         const { userId } = req.params 
+        const {remove} = req.query
         try {
             let user = await User.getUserPosts(userId)
             
-            res.render('profile', {user})
+            res.render('profile', {user, remove})
         } catch (error) {
             res.send(error)
         }
@@ -156,17 +157,32 @@ class Controller {
     static async detailPost (req, res){
         try {
             const { userId, postId } = req.params;
-            const { imageUrl, caption, createdDate } = post;
             const post = await Post.findOne({
-                where: { id: postId, userId: userId }, 
+                where: { id: postId, UserId: userId }, 
                 include: {
                   model: Tag,
-                  attributes: ['tagName'] 
+                  attributes: ['id','tagName'] 
                 }
               });
-            const tags = post.Tags.map(tag => tag.tagName);
 
-            res.render('postDetail', {imageUrl, caption, createdDate,tags,userId,postId});
+            let tags = (post.Tags && post.Tags.length > 0) ? post.Tags : []
+            tags = tags.map(el => el.tagName).join(", ")
+
+            res.render('postDetail', {post, tags, timeAgo});
+        } catch (error) {
+            console.log(error, "here error")
+            res.send(error)
+        }
+    }
+
+    static async deletePost(req, res){
+        try {
+            const { userId, postId } = req.params
+            let {username} = await User.findByPk(userId)
+            await Post.destroy({
+            where: { id: postId, UserId: userId },
+            });
+              res.redirect(`/profile/${userId}?remove=${username}`);
         } catch (error) {
             res.send(error)
         }

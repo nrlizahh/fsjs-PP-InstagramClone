@@ -55,6 +55,7 @@ app.post('/profile/:userId/edit', upload.single('avatar'), Controller.handlerUse
 app.get('/profile/:userId/add', Controller.renderAddPost)
 app.post('/profile/:userId/add', upload.single('imageUrl'), Controller.handlerAddPost)
 app.get('/profile/:userId/post/:postId', Controller.detailPost)
+app.get('/profile/:userId/post/:postId/delete', Controller.deletePost)
 
 
 app.listen(port, () => {
