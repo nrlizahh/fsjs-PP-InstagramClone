@@ -17,18 +17,18 @@ class UserController{
 
             if(data){
                 const isValidPassword =bcrypt.compareSync(password, data.password)
-
                 if(isValidPassword){
                     return res.redirect(`/profile/${data.id}`)
                 }else {
                     const error = "invalid password"
-                    res.redirect(`/?error=${error}`)
+                    return res.redirect(`/?error=${error}`)
                 }
             }
-            // res.render('home')
+            else{
+                const error = "invalid user"
+                return res.redirect(`/?error=${error}`)
+            }
         } catch (error) {
-            console.log(error);
-            
             res.send(error)
         }
     }
@@ -45,8 +45,8 @@ class UserController{
         try {
             //create user baru (username, password, role, email)
 
-            const {username, password, role, email} = req.body
-            await User.create({ username, password, role, email })
+            const {username, password, role, email, fullName} = req.body
+            await User.create({ username, password, role, email, fullName })
 
             res.redirect('/')
         } catch (error) {
