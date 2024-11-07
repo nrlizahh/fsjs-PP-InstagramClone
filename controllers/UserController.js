@@ -2,9 +2,11 @@ const { Post, PostTag, Profile, Tag, User} = require('../models')
 const bcrypt = require('bcrypt');
 
 class UserController{
+
     static async home (req, res){
         try {
-            res.render('home')
+            const {error} = req.query
+            res.render('home', {error})
         } catch (error) {
             res.send(error)
         }
@@ -18,6 +20,7 @@ class UserController{
             if(data){
                 const isValidPassword =bcrypt.compareSync(password, data.password)
                 if(isValidPassword){
+                    req.session.userId = data.id
                     return res.redirect(`/profile/${data.id}`)
                 }else {
                     const error = "invalid password"
@@ -25,7 +28,7 @@ class UserController{
                 }
             }
             else{
-                const error = "invalid user"
+                const error = "invalid username"
                 return res.redirect(`/?error=${error}`)
             }
         } catch (error) {
@@ -33,9 +36,26 @@ class UserController{
         }
     }
 
+    static async getLogout (req, res) {
+        try {
+            req.session.destroy((err) => {
+                if (err)res.send(err)
+
+                else {
+                    res.redirect('/')
+                }
+            })
+        } catch (error) {
+            res.send(error)
+        }
+
+    }
+
+    
     static async register(req, res){
         try {
-            res.render('register')
+            const {error} = req.query
+            res.render('register', {error})
         } catch (error) {
             res.send(error)
         }
@@ -50,7 +70,12 @@ class UserController{
 
             res.redirect('/')
         } catch (error) {
-            res.send(error)
+            if(error.name === 'SequelizeValidationError'){
+                let err = error.errors.map((el) =>  el.message)
+                res.redirect(`/register?error=${err}`)
+            }else{
+                res.send(error)
+            }
         }
     }
 }

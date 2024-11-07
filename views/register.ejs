@@ -14,6 +14,13 @@
       
       <form action="/register" method="POST">
 
+        <% if (error) { %>
+          <% error = error.split(',') %>
+          <% error.forEach(el => { %>
+              <p class="text-red-500 text-center mb-4"><%= el %></p>
+          <% }) %>
+      <% } %>
+      
         <div class="mb-4">
           <label for="username" class="block text-sm font-medium text-gray-600">username</label>
           <input type="text" id="username" name="username" class="w-full p-2 border border-gray-300 rounded mt-2" >

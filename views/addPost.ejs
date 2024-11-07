@@ -4,8 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Post</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <%= JSON.stringify(user) %>
+<body class="bg-gray-100">
+
+    <div class="max-w-3xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-semibold text-center text-gray-800">Create New Post</h1>
+
+        <!-- Form Add Post -->
+        <form action="/profile/<%= user.id %>/add" 
+            method="POST" 
+            class="space-y-6 mt-8"
+            enctype="multipart/form-data" >
+            
+            <!-- Input for Photo -->
+            <div class="flex flex-col space-y-2">
+                <label for="photo" class="block text-sm font-medium text-gray-700">Upload Photo</label>
+                
+                <!-- Preview Image -->
+                <div class="border-2 border-dashed border-gray-300 p-4 rounded-lg">
+                    <input type="file" name="imageUrl" id="photo" accept="image/*" class="hidden" onchange="previewImage(event)"  />
+                    <div id="imagePreview" class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                        <span>Click to upload a photo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input for Caption -->
+            <div>
+                <label for="caption" class="block text-sm font-medium text-gray-700">Caption</label>
+                <textarea name="caption" id="caption" rows="4" class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Write a caption..." ></textarea>
+            </div>
+            
+            
+            <!-- Select  & add for Tag -->
+            <div>
+                <% let tag = ["Technology", "Science", "Art", "Music", "Sports", "Literature", "Travel", "History", "Food", "Fashion"] %>
+                <label for="tags" class="block text-sm font-medium text-gray-700">Select Tags</label>
+                <div id="tagCheckboxes" class="space-y-2 mt-2">
+                    <% tag.forEach(tag => { %>
+                        <div>
+                            <input type="checkbox" name="tags" value="<%= tag %>" id="<%= tag %>" class="mr-2 leading-tight">
+                            <label for="<%= tag %>" class="text-sm text-gray-700"><%= tag %></label>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+            
+        
+
+            <!-- Submit Button -->
+            <div class="mt-6 flex justify-center">
+                <button type="submit" class="inline-block px-6 py-2 text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-md transition">
+                    Add Post
+                </button>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>

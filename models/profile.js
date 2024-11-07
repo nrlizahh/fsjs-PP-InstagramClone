@@ -15,7 +15,23 @@ module.exports = (sequelize, DataTypes) => {
   }
   Profile.init({
     gender: DataTypes.STRING,
-    biodata: DataTypes.STRING,
+    biodata:{
+      type : DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg : "biodata required!"
+        },
+        notEmpty: {
+          msg : "biodata required!"
+        },
+        len: {
+          args: [5,60],
+          msg: "The minimum length is 5 characters and the maximum length is 60 characters"
+        }
+      }
+    },
+    
     location: DataTypes.STRING,
     UserId: DataTypes.INTEGER,
     photoProfile: DataTypes.STRING

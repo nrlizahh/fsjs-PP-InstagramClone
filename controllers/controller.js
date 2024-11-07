@@ -1,5 +1,6 @@
 const { Post, PostTag, Profile, Tag, User} = require('../models')
-const { Op, ValidationErrorItemType } = require("sequelize")
+const { Op,} = require("sequelize")
+const { timeAgo } = require('../helper/helper')
 
 class Controller {
    
@@ -21,6 +22,7 @@ class Controller {
 
     static async renderUserEdit(req, res) {
         try {
+            const {error} = req.query
             const { userId } = req.params;
             let user = await User.findOne({
                 where: { id: userId }, 
@@ -29,7 +31,7 @@ class Controller {
                   as: 'profile' 
                 }]
               })
-            res.render('editProfile', {user})
+            res.render('editProfile', {user, error})
         } catch (error) {
           res.send(error);
         }
@@ -76,8 +78,13 @@ class Controller {
 
             res.redirect(`/profile/${userId}`);
         } catch (error) {
-            console.log(error, "error edit")
-            res.send(error);
+            const { userId } = req.params
+            if(error.name === 'SequelizeValidationError'){
+                let err = error.errors.map((el) =>  el.message)
+                res.redirect(`/profile/${userId}/edit?error=${err}`)
+            }else{
+                res.send(error)
+            }
         }
     }
     
@@ -91,22 +98,59 @@ class Controller {
                 include: [
                     {
                         model: Post, 
-                        include: [
-                            {
-                                model: Tag      
-                            }
-                        ]
                     }
                 ]
             });
-            console.log(user);
-            
-            // Render template dengan data user
-            res.render('addPost', { user });
+            let tag = await Tag.findAll()
+
+            res.render('addPost', { user, tag });
         } catch (error) {
-            
+            res.send(error)
         }
     }
+
+    static async handlerAddPost (req, res){
+        try {
+            const { userId } = req.params;
+            // const { filename } = req.file
+            console.log(req)
+            if (req.file) {
+                const photoUrl = req.file.path;  
+                let newPost = await Post.create({
+                    userId: userId,
+                    photoUrl: photoUrl,  
+                });
+            }
+           
+            // Redirect ke halaman profil user setelah foto di-upload
+            res.redirect(`/profile/${userId}`);
+        } catch (error) {
+            res.send(error)
+        }
+        
+    }
+
+    static async detailPost (req, res){
+        try {
+            const { userId, postId } = req.params;
+            const { imageUrl, caption, createdDate } = post;
+            const post = await Post.findOne({
+                where: { id: postId, userId: userId }, 
+                include: {
+                  model: Tag,
+                  attributes: ['tagName'] 
+                }
+              });
+            const tags = post.Tags.map(tag => tag.tagName);
+
+            res.render('postDetail', {imageUrl, caption, createdDate,tags,userId,postId});
+        } catch (error) {
+            res.send(error)
+        }
+    }
+
+
+    
 
 }
 
