@@ -49,6 +49,7 @@ app.get('/logout', UserController.getLogout)
 
 
 ///author
+app.get('/ig',Controller.ig)
 app.get('/profile/:userId', Controller.profilePage)
 app.get('/profile/:userId/edit', Controller.renderUserEdit)
 app.post('/profile/:userId/edit', upload.single('avatar'), Controller.handlerUserEdit)

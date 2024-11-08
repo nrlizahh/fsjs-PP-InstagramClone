@@ -189,7 +189,48 @@ class Controller {
     }
 
 
-    
+    static async ig (req, res) {
+        try {
+
+            let {userName} = req.query
+            let option = {}
+            if (userName) {
+                option.where = {
+                  username:{
+                    [Op.iLike]: `%${userName}%`,
+                  }
+                }
+            }
+            let data = await User.findAll(option,{
+                include: [{
+                  model: Profile,
+                },{
+                    model: Post,
+                  }
+                ]   
+              })
+              let userId = req.session.userId
+            res.render('ig', {data,userName, userId})
+        } catch (error) {
+            console.log(error);
+
+        } 
+
+    }
+
+    // static async search (req, res) {
+    //     try {
+    //         let data = await User.findAll({
+    //             include: [{
+    //                 model: Profile,
+    //             }
+    //         ]
+    //         })      
+    //         res.render('search', {data})
+    //     } catch (error) {
+            
+    //     }
+    // }
 
 }
 

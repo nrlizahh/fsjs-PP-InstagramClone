@@ -1,6 +1,6 @@
 const multer = require('multer');
 
-// Konfigurasi untuk penyimpanan file
+//tempat penyimpanan file
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.fieldname === 'avatar') {
@@ -15,25 +15,25 @@ const storage = multer.diskStorage({
       }
   },
   filename: function (req, file, cb) {
-    // Tentukan nama file yang disimpan (misal menambahkan timestamp untuk unik)
+    //Menentukan nama file image yang akan di simpan
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
-// Filter untuk hanya menerima file gambar
+// cb yang hanya menerima fil dalam bentuk gambar
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
   if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);  // Terima file
+    cb(null, true);  // Menerima file
   } else {
-    cb(new Error('Invalid file type. Only JPG, PNG, and GIF are allowed!'), false);  // Tolak file yang tidak sesuai
+    cb(new Error('Invalid file type. Only JPG, PNG, and GIF are allowed!'), false);  //Menolak file yang tidak sesuai
   }
 };
 
-// Setup multer dengan konfigurasi storage dan file filter
+// filter gambar yang akan di simpan ke folder
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },  // Maksimum ukuran file 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },  
   fileFilter: fileFilter
 });
 
